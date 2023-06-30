@@ -30,3 +30,22 @@ variable "vpc_name" {
   default     = "develop"
   description = "VPC network&subnet name"
 }
+
+#variable "vm_machine" {
+#  type = list(object({vm_name = string, cpu = number, ram = number, disk = number}))
+#  }
+  
+###ssh vars
+variable "meta" {
+  type = map(object({
+    serial-port-enable = number
+    ssh_keys = string
+  }))
+  default = {
+    "ssh_root_key" = {
+      serial-port-enable = 1
+      ssh_keys = "ubuntu:id_ed25519.pub"
+    }
+  }
+  
+}
