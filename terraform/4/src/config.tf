@@ -3,7 +3,7 @@ data template_file "cloud_init" {
 
   vars = {
     username           = var.username
-    ssh_public_key     = file(var.ssh_public_key)
+    ssh_public_key     = file("~/id_rsa.pub")
     packages           = jsonencode(var.packages)
   }
 }

@@ -39,10 +39,10 @@ variable "vms_ssh_root_key" {
   description = "ssh-keygen -t ed25519"
 }
 
-variable "ssh_public_key" {
-  type = string
-  default = "~/.ssh/id_ed25519.pub"
-}
+#variable "ssh_public_key" {
+#  type = string
+#  default = ""
+#}
 
 variable username {
   type = string
