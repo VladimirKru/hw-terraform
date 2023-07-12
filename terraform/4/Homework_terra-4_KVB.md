@@ -18,13 +18,7 @@
     ![Alt text](img4.png)
 ## Задание 2
 
-1. Напишите локальный модуль vpc, который будет создавать 2 ресурса: одну сеть и одну подсеть в зоне, объявленной при вызове модуля. например: ru-central1-a.
-   
-   ![Alt text](img5.png)
-
-  * Файл main.tf модуля
-  
-   ![Alt text](img6.png)
+1. Напишите [локальный](https://github.com/VladimirKru/hw-terraform/tree/main/terraform/4/demonstration1/secondary_net_sub) модуль vpc, который будет создавать 2 ресурса: одну сеть и одну подсеть в зоне, объявленной при вызове модуля. например: ru-central1-a.
 
 2. Модуль должен возвращать значения vpc.id и subnet.
    
@@ -32,5 +26,5 @@
 3. Замените ресурсы yandex_vpc_network и yandex_vpc_subnet, созданным модулем.
    
    ![Alt text](img8.png)
-4. Сгенерируйте документацию к модулю с помощью terraform-docs.
+4. Сгенерируйте [документацию](https://github.com/VladimirKru/hw-terraform/blob/main/terraform/4/demonstration1/docs.md) к модулю с помощью terraform-docs.
    
