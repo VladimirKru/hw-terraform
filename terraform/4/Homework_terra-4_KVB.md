@@ -31,61 +31,87 @@
 ## Задание 3
 
 1. Выведите список ресурсов в стейте.
-   ![Alt text](img9.png)
 2. Полностью удалите из стейта модуль vpc.
-3. Полностью удалите из стейта модуль vm.
-   ```markdown
-    cio@hp-lx:~/devops-2023/git/hw-terraform/terraform/4/demonstration1$ terraform state rm 'module.secondary_net_sub.yandex_vpc_subnet.test' 
-    Removed module.secondary_net_sub.yandex_vpc_subnet.test
-    Successfully removed 1 resource instance(s).
-    cio@hp-lx:~/devops-2023/git/hw-terraform/terraform/4/demonstration1$ terraform state rm 'module.test-vm.yandex_compute_instance.vm[0]'
-    Removed module.test-vm.yandex_compute_instance.vm[0]
-    Successfully removed 1 resource instance(s).
-    cio@hp-lx:~/devops-2023/git/hw-terraform/terraform/4/demonstration1$ terraform state rm 'module.test-vm.yandex_compute_instance.vm[1]'
-    Removed module.test-vm.yandex_compute_instance.vm[1]
-    Successfully removed 1 resource instance(s).
-   ```
-4. Импортируйте все обратно. Проверьте terraform plan - изменений быть не должно. Приложите список выполненных команд и скриншоты процессы.
-   ```markdown
-   cio@hp-lx:~/devops-2023/git/hw-terraform/terraform/4/demonstration1$ terraform plan
-    data.template_file.cloudinit: Reading...
-    data.template_file.cloudinit: Read complete after 0s [id=eb2117f32966e2b056f212bca8851d5902894ee9cc53a1a042e65fcc7e114478]
-    module.test-vm.data.yandex_compute_image.my_image: Reading...
-    module.secondary_net_sub.yandex_vpc_network.test: Refreshing state... [id=enp590epdq5mb6nlfs3t]
-    module.test-vm.data.yandex_compute_image.my_image: Read complete after 0s [id=fd85f37uh98ldl1omk30]
-    module.secondary_net_sub.yandex_vpc_subnet.test: Refreshing state... [id=e9bjdu44v9ifcg4d3lmi]
-    module.test-vm.yandex_compute_instance.vm[1]: Refreshing state... [id=fhma7ph4lkve9tfiup7e]
-    module.test-vm.yandex_compute_instance.vm[0]: Refreshing state... [id=fhmg2nmotitr2je06f77]
+3. Импортируйте все обратно. Проверьте terraform plan - изменений быть не должно. Приложите список выполненных команд и скриншоты процессы.
+```markdown
+cio@hp-lx:~/devops-2023/git/hw-terraform/terraform/4/demonstration1$ terraform state list
+data.template_file.cloudinit
+module.secondary_net_sub.yandex_vpc_network.test
+module.secondary_net_sub.yandex_vpc_subnet.test
+module.test-vm.data.yandex_compute_image.my_image
+module.test-vm.yandex_compute_instance.vm[0]
+module.test-vm.yandex_compute_instance.vm[1]
+cio@hp-lx:~/devops-2023/git/hw-terraform/terraform/4/demonstration1$ terraform state show module.secondary_net_sub.yandex_vpc_subnet.test
+# module.secondary_net_sub.yandex_vpc_subnet.test:
+resource "yandex_vpc_subnet" "test" {
+    created_at     = "2023-07-13T21:41:48Z"
+    folder_id      = "b1gq43cobb08cuhvbs1v"
+    id             = "e9b9e7hq8n08ch5eh0a8"
+    labels         = {}
+    name           = "test-ru-central1-a"
+    network_id     = "enp8eqq0figtj96ro9qn"
+    v4_cidr_blocks = [
+        "192.168.2.0/24",
+    ]
+    v6_cidr_blocks = []
+    zone           = "ru-central1-a"
+}
+cio@hp-lx:~/devops-2023/git/hw-terraform/terraform/4/demonstration1$ terraform state rm  module.secondary_net_sub.yandex_vpc_subnet.test
+Removed module.secondary_net_sub.yandex_vpc_subnet.test
+Successfully removed 1 resource instance(s).
+cio@hp-lx:~/devops-2023/git/hw-terraform/terraform/4/demonstration1$ terraform import  module.secondary_net_sub.yandex_vpc_subnet.test e9b9e7hq8n08ch5eh0a8
+╷
+│ Warning: Version constraints inside provider configuration blocks are deprecated
+│ 
+│   on .terraform/modules/test-vm/providers.tf line 2, in provider "template":
+│    2:   version = "2.2.0"
+│ 
+│ Terraform 0.13 and earlier allowed provider version constraints inside the
+│ provider configuration block, but that is now deprecated and will be
+│ removed in a future version of Terraform. To silence this warning, move the
+│ provider version constraint into the required_providers block.
+╵
 
-    Terraform used the selected providers to generate the following execution
-    plan. Resource actions are indicated with the following symbols:
-    ~ update in-place
+data.template_file.cloudinit: Reading...
+data.template_file.cloudinit: Read complete after 0s [id=eb2117f32966e2b056f212bca8851d5902894ee9cc53a1a042e65fcc7e114478]
+module.test-vm.data.yandex_compute_image.my_image: Reading...
+module.secondary_net_sub.yandex_vpc_subnet.test: Importing from ID "e9b9e7hq8n08ch5eh0a8"...
+module.secondary_net_sub.yandex_vpc_subnet.test: Import prepared!
+  Prepared yandex_vpc_subnet for import
+module.secondary_net_sub.yandex_vpc_subnet.test: Refreshing state... [id=e9b9e7hq8n08ch5eh0a8]
+module.test-vm.data.yandex_compute_image.my_image: Read complete after 1s [id=fd85f37uh98ldl1omk30]
 
-    Terraform will perform the following actions:
+Import successful!
 
-    # module.test-vm.yandex_compute_instance.vm[0] will be updated in-place
-    ~ resource "yandex_compute_instance" "vm" {
-        + allow_stopping_for_update = true
-            id                        = "fhmg2nmotitr2je06f77"
-            name                      = "develop-web-0"
-            # (11 unchanged attributes hidden)
+The resources that were imported are shown above. These resources are now in
+your Terraform state and will henceforth be managed by Terraform.
 
-        - timeouts {}
+╷
+│ Warning: Version constraints inside provider configuration blocks are deprecated
+│ 
+│   on .terraform/modules/test-vm/providers.tf line 2, in provider "template":
+│    2:   version = "2.2.0"
+│ 
+│ Terraform 0.13 and earlier allowed provider version constraints inside the
+│ provider configuration block, but that is now deprecated and will be
+│ removed in a future version of Terraform. To silence this warning, move the
+│ provider version constraint into the required_providers block.
+│ 
+│ (and one more similar warning elsewhere)
+╵
 
-            # (6 unchanged blocks hidden)
-        }
+cio@hp-lx:~/devops-2023/git/hw-terraform/terraform/4/demonstration1$ terraform plan
+data.template_file.cloudinit: Reading...
+data.template_file.cloudinit: Read complete after 0s [id=eb2117f32966e2b056f212bca8851d5902894ee9cc53a1a042e65fcc7e114478]
+module.test-vm.data.yandex_compute_image.my_image: Reading...
+module.secondary_net_sub.yandex_vpc_network.test: Refreshing state... [id=enp8eqq0figtj96ro9qn]
+module.test-vm.data.yandex_compute_image.my_image: Read complete after 0s [id=fd85f37uh98ldl1omk30]
+module.secondary_net_sub.yandex_vpc_subnet.test: Refreshing state... [id=e9b9e7hq8n08ch5eh0a8]
+module.test-vm.yandex_compute_instance.vm[0]: Refreshing state... [id=fhmcublme8i41d6vj1km]
+module.test-vm.yandex_compute_instance.vm[1]: Refreshing state... [id=fhmrd67aohgoff80i44e]
 
-    # module.test-vm.yandex_compute_instance.vm[1] will be updated in-place
-    ~ resource "yandex_compute_instance" "vm" {
-        + allow_stopping_for_update = true
-            id                        = "fhma7ph4lkve9tfiup7e"
-            name                      = "develop-web-1"
-            # (11 unchanged attributes hidden)
+No changes. Your infrastructure matches the configuration.
 
-        - timeouts {}
-
-            # (6 unchanged blocks hidden)
-        }
-
-    Plan: 0 to add, 2 to change, 0 to destroy.
-   ```
+Terraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+```
